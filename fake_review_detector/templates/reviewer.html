@@ -1,0 +1,46 @@
+
+
+{% extends "base.html" %}
+{% block title %}Fake Reviewer Analysis{% endblock %}
+{% block content %}
+<h3 class="mb-4">Fake Reviewer Analysis</h3>
+
+<form method="GET" class="mb-3 d-flex gap-2">
+  <select name="dataset_id" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="">Select a dataset</option>
+    {% for d in datasets %}
+    <option value="{{ d['id'] }}" {% if active_dataset_id == d['id']|string %}selected{% endif %}>{{ d['filename'] }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div class="card">
+  <div class="card-header">Reviewer Risk Levels</div>
+  <div class="card-body">
+    {% if table %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Reviewer</th><th>Review Count</th><th>Avg Rating</th><th>Low-Effort Ratio</th><th>Risk Level</th></tr></thead>
+        <tbody>
+        {% for r in table %}
+          <tr>
+            <td>{{ r['reviewer_name'] }}</td>
+            <td>{{ r['review_count'] }}</td>
+            <td>{{ r['avg_rating'] if r['avg_rating'] is not none else '-' }}</td>
+            <td>{{ r['duplicate_ratio'] }}</td>
+            <td>
+              {% if r['risk_level'] == 'High' %}<span class="badge bg-danger">High</span>
+              {% elif r['risk_level'] == 'Medium' %}<span class="badge bg-warning text-dark">Medium</span>
+              {% else %}<span class="badge bg-success">Low</span>{% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">Select a dataset with a "reviewer_name" column to view this analysis.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

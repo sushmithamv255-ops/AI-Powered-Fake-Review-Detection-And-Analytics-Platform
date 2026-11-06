@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+
+
+<h3 class="mb-4">Reports</h3>
+
+<div class="card">
+  <div class="card-header">Generate a Report for a Dataset</div>
+  <div class="card-body">
+    {% if datasets %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Filename</th><th>Rows</th><th>Uploaded</th><th>Actions</th></tr></thead>
+        <tbody>
+        {% for d in datasets %}
+          <tr>
+            <td>{{ d['filename'] }}</td>
+            <td>{{ d['row_count'] }}</td>
+            <td>{{ d['uploaded_at'] }}</td>
+            <td class="d-flex flex-wrap gap-2">
+              <a href="{{ url_for('report_pdf', dataset_id=d['id']) }}" class="btn btn-sm btn-outline-secondary">PDF</a>
+              <a href="{{ url_for('report_excel', dataset_id=d['id']) }}" class="btn btn-sm btn-outline-secondary">Excel</a>
+              <a href="{{ url_for('report_qr', dataset_id=d['id']) }}" class="btn btn-sm btn-outline-secondary" target="_blank">QR Code</a>
+              <a href="{{ url_for('upload_preview', dataset_id=d['id']) }}" class="btn btn-sm btn-outline-secondary">Print</a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">Upload a dataset first to generate reports.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Duplicate Detection{% endblock %}
+{% block content %}
+<h3 class="mb-4">Duplicate Review Detection</h3>
+<form method="GET" class="mb-3 d-flex gap-2">
+  <select name="dataset_id" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="">Select a dataset</option>
+    {% for d in datasets %}
+    <option value="{{ d['id'] }}" {% if active_dataset_id == d['id']|string %}selected{% endif %}>{{ d['filename'] }}</option>
+    {% endfor %}
+  </select>
+</form>
+<div class="card stat-card mb-3" style="max-width: 320px;">
+  <div class="stat-value">{{ dup_pct }}%</div>
+  <div class="stat-label">Duplicate Reviews</div>
+</div>
+
+<div class="card">
+  <div class="card-header">Flagged Reviews</div>
+  <div class="card-body">
+    {% if rows %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Reviewer</th><th>Review</th><th>Duplicate?</th></tr></thead>
+        <tbody>
+        {% for r in rows %}
+          <tr class="{% if r['is_duplicate'] %}table-warning{% endif %}">
+            <td>{{ r['reviewer_name'] or '-' }}</td>
+            <td>{{ r['review_text'] }}</td>
+            <td>{% if r['is_duplicate'] %}<span class="badge bg-warning text-dark">Duplicate</span>{% else %}<span class="badge bg-light text-dark">Unique</span>{% endif %}</td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">Select a dataset above to view duplicate analysis.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

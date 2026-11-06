@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Upload Dataset{% endblock %}
+{% block content %}
+<h3 class="mb-4">Upload Dataset</h3>
+
+<div class="card mb-4">
+  <div class="card-header">Upload CSV or Excel File</div>
+  <div class="card-body">
+    <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload') }}">
+      <div class="mb-3">
+        <input type="file" class="form-control" name="dataset_file" accept=".csv,.xlsx,.xls" required>
+        <div class="form-text">
+          File must include a review text column (accepted names: <code>review_text</code>,
+          <code>review</code>, <code>text</code>, <code>comment</code>). Optional columns:
+          <code>reviewer_name</code>, <code>rating</code>.<br>
+          Maximum file size: 100 GB.
+        </div>
+      </div>
+      <button type="submit" class="btn btn-brand">Upload &amp; Analyze</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Your Uploaded Datasets</div>
+  <div class="card-body">
+    {% if datasets %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle mb-0">
+        <thead><tr><th>Filename</th><th>Rows</th><th>Uploaded</th><th></th></tr></thead>
+        <tbody>
+          {% for d in datasets %}
+          <tr>
+            <td>{{ d['filename'] }}</td>
+            <td>{{ d['row_count'] }}</td>
+            <td>{{ d['uploaded_at'] }}</td>
+            <td><a href="{{ url_for('upload_preview', dataset_id=d['id']) }}" class="btn btn-sm btn-outline-primary">View</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">No datasets uploaded yet.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

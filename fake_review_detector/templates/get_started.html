@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Get Started{% endblock %}
+{% block content %}
+<div class="hero mb-4 text-center">
+  <h1 class="display-5 fw-bold">Fake Review Detector</h1>
+  <p class="lead">Start by logging in or registering to analyze reviews for fake content.</p>
+  <div class="mt-4">
+    <a href="{{ url_for('login') }}" class="btn btn-light btn-lg fw-semibold me-2">Login</a>
+    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">Register</a>
+  </div>
+</div>
+{% endblock %}

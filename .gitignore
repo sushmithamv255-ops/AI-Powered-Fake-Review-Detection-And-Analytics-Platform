@@ -1,0 +1,10 @@
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+fake_review_detector/uploads/*
+!fake_review_detector/uploads/.gitkeep
+fake_review_detector/instance/*.db
+fake_review_detector/tmp_*.py
+.vscode/tasks.json

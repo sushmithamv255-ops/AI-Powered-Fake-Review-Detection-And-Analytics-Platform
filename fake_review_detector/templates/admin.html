@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+<h3 class="mb-4">Admin Panel</h3>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card stat-card"><div class="stat-value">{{ stats.total_users }}</div><div class="stat-label">Total Users</div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card"><div class="stat-value">{{ stats.total_datasets }}</div><div class="stat-label">Datasets Uploaded</div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card"><div class="stat-value">{{ stats.total_reviews }}</div><div class="stat-label">Reviews Processed</div></div>
+  </div>
+  <div class="col-md-3">
+    <div class="card stat-card" style="border-left-color: var(--accent-red);"><div class="stat-value">{{ stats.total_fake }}</div><div class="stat-label">Fake Reviews Found</div></div>
+  </div>
+</div>
+<div class="card mb-4">
+  <div class="card-header">Manage Users</div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Username</th><th>Email</th><th>Admin?</th><th>Joined</th><th></th></tr></thead>
+        <tbody>
+        {% for u in users %}
+          <tr>
+            <td>{{ u['username'] }}</td>
+            <td>{{ u['email'] }}</td>
+            <td>{% if u['is_admin'] %}<span class="badge bg-primary">Admin</span>{% else %}-{% endif %}</td>
+            <td>{{ u['created_at'] }}</td>
+            <td>
+              {% if u['id'] != session.get('user_id') %}
+              <form method="POST" action="{{ url_for('admin_delete_user', user_id=u['id']) }}" onsubmit="return confirm('Delete this user and all their data?');">
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Uploaded Datasets</div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Filename</th><th>Uploaded By</th><th>Rows</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+        {% for d in datasets %}
+          <tr>
+            <td>{{ d['filename'] }}</td>
+            <td>{{ d['username'] }}</td>
+            <td>{{ d['row_count'] }}</td>
+            <td>{{ d['uploaded_at'] }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('admin_delete_dataset', dataset_id=d['id']) }}" onsubmit="return confirm('Delete this dataset and its reviews?');">
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

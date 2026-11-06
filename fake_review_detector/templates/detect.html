@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Fake Review Detection{% endblock %}
+{% block content %}
+<h3 class="mb-4">Fake Review Detection</h3>
+<div class="card mb-4">
+  <div class="card-header">Enter a Review</div>
+  <div class="card-body">
+    <form method="POST" action="{{ url_for('detect') }}">
+      <div class="mb-3">
+        <textarea class="form-control" name="review_text" rows="5" placeholder="Paste a review here..." required>{{ request.form.get('review_text', '') }}</textarea>
+      </div>
+      <button type="submit" class="btn btn-brand">Analyze Review</button>
+    </form>
+  </div>
+</div>
+{% if result %}
+<div class="card">
+  <div class="card-header">Result</div>
+  <div class="card-body">
+    <div class="d-flex align-items-center gap-3 mb-3">
+      {% if result.label == 'Fake' %}
+        <span class="badge badge-fake fs-5">Fake Review</span>
+      {% else %}
+        <span class="badge badge-genuine fs-5">Genuine Review</span>
+      {% endif %}
+      <span class="fs-5">Confidence: <strong>{{ result.confidence }}%</strong></span>
+    </div>
+    <div class="progress mb-3" style="height: 10px;">
+      <div class="progress-bar {% if result.label == 'Fake' %}bg-danger{% else %}bg-success{% endif %}"
+           style="width: {{ result.confidence }}%"></div>
+    </div>
+    <p><strong>Sentiment:</strong> {{ result.sentiment }}</p>
+    <p><strong>Spam Score:</strong> {{ result.spam.spam_score }}/100</p>
+    {% if result.spam.flags %}
+    <ul>
+      {% for f in result.spam.flags %}<li>{{ f }}</li>{% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+{% endblock %}

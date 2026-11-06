@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Sentiment Analysis{% endblock %}
+{% block content %}
+<h3 class="mb-4">Sentiment Analysis</h3>
+
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+  <form method="GET" class="d-flex gap-2 flex-wrap align-items-center">
+    <select name="dataset_id" class="form-select w-auto" onchange="this.form.submit()">
+      <option value="" {% if not active_dataset_id %}selected{% endif %}>All reviews (all datasets)</option>
+      {% for d in datasets %}
+      <option value="{{ d['id'] }}" {% if active_dataset_id == d['id']|string %}selected{% endif %}>{{ d['filename'] }}</option>
+      {% endfor %}
+    </select>
+    <select name="review_type" class="form-select w-auto" onchange="this.form.submit()">
+      <option value="" {% if not review_type %}selected{% endif %}>All reviews</option>
+      <option value="Genuine" {% if review_type == 'Genuine' %}selected{% endif %}>Genuine reviews</option>
+      <option value="Fake" {% if review_type == 'Fake' %}selected{% endif %}>Fake reviews</option>
+    </select>
+  </form>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('upload') }}" class="btn btn-outline-primary btn-sm">Upload Dataset</a>
+    {% if rows %}
+    <a href="{{ url_for('download_sentiment_report', dataset_id=active_dataset_id, review_type=review_type) }}" class="btn btn-outline-secondary btn-sm">Download Report</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="row g-3">
+  <div class="col-md-4">
+    <div class="card">
+      <div class="card-header">Breakdown</div>
+      <div class="card-body">
+        <canvas id="sentimentChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="card">
+      <div class="card-header">Reviews ({{ rows|length }})</div>
+      <div class="card-body" style="max-height:420px; overflow-y:auto;">
+        {% if rows %}
+        <table class="table table-sm">
+          <thead><tr><th>Review</th><th>Sentiment</th></tr></thead>
+          <tbody>
+          {% for r in rows %}
+            <tr>
+              {% set review_text = r['review_text'] or '' %}
+              <td>{{ review_text[:100] }}{% if review_text|length > 100 %}...{% endif %}</td>
+              <td>
+                {% if r['sentiment'] == 'Positive' %}<span class="badge bg-success">Positive</span>
+                {% elif r['sentiment'] == 'Negative' %}<span class="badge bg-danger">Negative</span>
+                {% else %}<span class="badge bg-secondary">{{ r['sentiment'] or 'Neutral' }}</span>{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="text-muted mb-0">No reviews to show yet. Upload a dataset or analyze a review first.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+new Chart(document.getElementById('sentimentChart'), {
+  type: 'pie',
+  data: {
+    labels: ['Positive', 'Negative', 'Neutral'],
+    datasets: [{
+      data: [{{ counts['Positive'] }}, {{ counts['Negative'] }}, {{ counts['Neutral'] }}],
+      backgroundColor: ['#2e9e5b', '#d64545', '#8a97a5'],
+    }]
+  },
+  options: { plugins: { legend: { position: 'bottom' } } }
+});
+</script>
+{% endblock %}

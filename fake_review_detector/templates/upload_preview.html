@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Dataset Results{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">Results: {{ dataset['filename'] }}</h3>
+  <div class="d-flex gap-2">
+    <a href="{{ url_for('sentiment_page', dataset_id=dataset['id']) }}" class="btn btn-sm btn-outline-primary">Sentiment</a>
+    <a href="{{ url_for('duplicates_page', dataset_id=dataset['id']) }}" class="btn btn-sm btn-outline-primary">Duplicates</a>
+    <a href="{{ url_for('spam_page', dataset_id=dataset['id']) }}" class="btn btn-sm btn-outline-primary">Spam</a>
+    <a href="{{ url_for('reviewer_page', dataset_id=dataset['id']) }}" class="btn btn-sm btn-outline-primary">Reviewers</a>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">Preview (first 25 rows)</div>
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Reviewer</th><th>Review</th><th>Rating</th>
+            <th>Prediction</th><th>Confidence</th><th>Sentiment</th><th>Spam Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in rows %}
+          <tr>
+            <td>{{ r['reviewer_name'] or '-' }}</td>
+            <td style="max-width:340px;">{{ r['review_text'] }}</td>
+            <td>{{ r['rating'] if r['rating'] is not none else '-' }}</td>
+            <td>
+              {% if r['prediction'] == 'Fake' %}
+                <span class="badge badge-fake">Fake</span>
+              {% else %}
+                <span class="badge badge-genuine">Genuine</span>
+              {% endif %}
+            </td>
+            <td>{{ r['confidence'] }}%</td>
+            <td>{{ r['sentiment'] }}</td>
+            <td>{{ r['spam_score'] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="mt-3">
+  <a href="{{ url_for('report_pdf', dataset_id=dataset['id']) }}" class="btn btn-outline-secondary">Download PDF</a>
+  <a href="{{ url_for('report_excel', dataset_id=dataset['id']) }}" class="btn btn-outline-secondary">Export Excel</a>
+  <a href="{{ url_for('report_qr', dataset_id=dataset['id']) }}" class="btn btn-outline-secondary" target="_blank">QR Code</a>
+  <button type="button" class="btn btn-outline-secondary no-print" onclick="window.print()">Print</button>
+</div>
+{% endblock %}

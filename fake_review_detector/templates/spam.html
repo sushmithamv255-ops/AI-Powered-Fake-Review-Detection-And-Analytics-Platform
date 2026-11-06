@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Spam Keyword Detection{% endblock %}
+{% block content %}
+<h3 class="mb-4">Spam Keyword Detection</h3>
+
+<form method="GET" class="mb-3 d-flex gap-2">
+  <select name="dataset_id" class="form-select w-auto" onchange="this.form.submit()">
+    <option value="">Select a dataset</option>
+    {% for d in datasets %}
+    <option value="{{ d['id'] }}" {% if active_dataset_id == d['id']|string %}selected{% endif %}>{{ d['filename'] }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div class="card">
+  <div class="card-header">Reviews Sorted by Spam Score</div>
+  <div class="card-body">
+    {% if rows %}
+    <div class="table-responsive">
+      <table class="table table-hover align-middle">
+        <thead><tr><th>Review</th><th>Spam Score</th></tr></thead>
+        <tbody>
+        {% for r in rows %}
+          <tr>
+            <td>{{ r['review_text'] }}</td>
+            <td style="min-width:160px;">
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar {% if r['spam_score'] >= 60 %}bg-danger{% elif r['spam_score'] >= 30 %}bg-warning{% else %}bg-success{% endif %}"
+                     style="width: {{ r['spam_score'] }}%"></div>
+              </div>
+              <span class="small text-muted">{{ r['spam_score'] }}/100</span>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted mb-0">Select a dataset above to view spam analysis.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

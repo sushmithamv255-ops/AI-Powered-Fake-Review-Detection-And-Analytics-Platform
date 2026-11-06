@@ -1,0 +1,126 @@
+:root {
+  --brand-blue: #1f4e8c;
+  --brand-blue-dark: #143a6b;
+  --brand-blue-light: #eaf1fb;
+  --accent-red: #d64545;
+  --accent-green: #2e9e5b;
+  --bg: #f6f8fb;
+}
+
+body {
+  background-color: var(--bg);
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  color: #1c2733;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+.navbar-custom {
+  background-color: var(--brand-blue);
+}
+
+.navbar-custom .nav-link,
+.navbar-custom .navbar-brand {
+  color: #fff !important;
+}
+
+.navbar-custom .nav-link:hover {
+  color: var(--brand-blue-light) !important;
+}
+
+.hero {
+  background: linear-gradient(135deg, var(--brand-blue) 0%, var(--brand-blue-dark) 100%);
+  color: white;
+  border-radius: 12px;
+  padding: 3.5rem 2.5rem;
+}
+
+.hero .lead {
+  color: #d9e6f7;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(20, 58, 107, 0.07);
+}
+
+.card-header {
+  background-color: var(--brand-blue-light);
+  border-bottom: none;
+  border-radius: 12px 12px 0 0 !important;
+  font-weight: 600;
+  color: var(--brand-blue-dark);
+}
+
+.stat-card {
+  border-left: 5px solid var(--brand-blue);
+  padding: 1.25rem 1.5rem;
+}
+
+.stat-card .stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brand-blue-dark);
+}
+
+.stat-card .stat-label {
+  color: #6c7a89;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-brand {
+  background-color: var(--brand-blue);
+  border-color: var(--brand-blue);
+  color: #fff;
+}
+
+.btn-brand:hover {
+  background-color: var(--brand-blue-dark);
+  border-color: var(--brand-blue-dark);
+  color: #fff;
+}
+
+.badge-fake {
+  background-color: var(--accent-red);
+}
+
+.badge-genuine {
+  background-color: var(--accent-green);
+}
+
+.sidebar-nav .nav-link {
+  color: #1c2733;
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+  margin-bottom: 4px;
+}
+
+.sidebar-nav .nav-link.active,
+.sidebar-nav .nav-link:hover {
+  background-color: var(--brand-blue-light);
+  color: var(--brand-blue-dark);
+  font-weight: 600;
+}
+
+footer {
+  color: #8a97a5;
+  font-size: 0.85rem;
+  padding: 2rem 0 1rem;
+}
+
+.table-responsive {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+@media print {
+  .no-print, .navbar-custom, .sidebar-nav, footer {
+    display: none !important;
+  }
+}
