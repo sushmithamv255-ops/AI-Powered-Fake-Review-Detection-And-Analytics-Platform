@@ -1,9 +1,6 @@
 # AI-Powered-Fake-Review-Detection-And-Analytics-Platform
 Built an AI-powered review intelligence platform that classifies reviews as genuine or fake using a trained ML model, analyzes sentiment, flags duplicate and spammy content, scores reviewer risk, and generates downloadable PDF/Excel reports through an admin dashboard.
 
-LIVE DEMO
- https://chatgpt.com/c/YOUR_LIVE_DEMO_URL
-
 Problem Statement
 Businesses and marketplaces lose customer trust every day because fake reviews go undetected — misleading buyers, distorting ratings, and letting spam/reviewer fraud slip through unnoticed.
  
